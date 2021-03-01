@@ -9,10 +9,10 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  Location location = new Location();
+  UserLocation location = new UserLocation();
 
   void getLocationData() async {
-    location.getCurrentLocation();
+    await location.getCurrentLocation();
     Navigator.pushNamed(context, LoginScreen.id);
   }
 

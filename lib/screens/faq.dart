@@ -9,6 +9,12 @@ class FAQ extends StatefulWidget {
 class _FAQState extends State<FAQ> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("FAQ's"),
+        backgroundColor: Colors.deepPurple,
+      ),
+    );
   }
 }

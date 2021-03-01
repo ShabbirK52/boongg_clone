@@ -1,5 +1,12 @@
-import 'package:boongg_clone/screens/my_bookings.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:boongg_clone/components/drawer_menu.dart';
+import 'package:boongg_clone/services/vehicile_details.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:boongg_clone/services/location.dart';
+import 'package:circular_check_box/circular_check_box.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = "home_screen";
@@ -8,115 +15,180 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  VehicleList vehicles = VehicleList();
+  var json;
+  UserLocation loc;
+  MapController controller;
+
+  Future getUserLocation() async {
+    controller = MapController();
+    loc = UserLocation();
+    await loc.getCurrentLocation();
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(loc.latitude, loc.longitude);
+    json = jsonEncode(placemarks.map((e) => e.toJson()).toList());
+    json = jsonDecode(json);
+    setState(() {
+      controller.move(LatLng(loc.latitude, loc.longitude), 15);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserLocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Clone"),
-      ),
-      drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
-                color: Colors.deepPurple,
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.account_circle_outlined,
-                      size: 50,
-                      color: Colors.grey.shade200,
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "Name",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Phno",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: json == null
+            ? Text(
+                "Clone",
+                style: TextStyle(color: Colors.black),
+              )
+            : Wrap(children: [
+                Icon(
+                  Icons.location_pin,
+                  color: Colors.deepPurple,
                 ),
-              ),
-              MenuItem(
-                iconData: Icons.motorcycle_outlined,
-                title: "My Bookings",
-                callBack: () {
-                  Navigator.pushNamed(context, MyBookings.id);
-                },
-              ),
-              MenuItem(
-                iconData: Icons.badge,
-                title: "Driving License",
-                callBack: () {
-                  Navigator.pushNamed(context, MyBookings.id);
-                },
-              ),
-              MenuItem(
-                iconData: Icons.contact_support_outlined,
-                title: "FAQ",
-                callBack: () {
-                  Navigator.pushNamed(context, MyBookings.id);
-                },
-              ),
-              MenuItem(
-                iconData: Icons.phone,
-                title: "Support",
-                callBack: () {
-                  Navigator.pushNamed(context, MyBookings.id);
-                },
+                Text(
+                  "${json[0]["subLocality"]}",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ]),
+      ),
+      drawer: DrawerMenu(),
+      body: Stack(
+        children: [
+          Container(
+            child: Column(
+              children: [],
+            ),
+          ),
+          FlutterMap(
+            mapController: controller,
+            options: new MapOptions(
+              center: loc.latitude != null
+                  ? LatLng(loc.latitude, loc.longitude)
+                  : LatLng(20.5937, 78.9629),
+              zoom: 10.0,
+            ),
+            layers: [
+              TileLayerOptions(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c']),
+              MarkerLayerOptions(
+                markers: [
+                  Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: loc.latitude != null
+                        ? LatLng(loc.latitude, loc.longitude)
+                        : LatLng(20.5937, 78.9629),
+                    builder: (ctx) => new Container(
+                      child: Icon(
+                        Icons.location_pin,
+                        color: Colors.deepPurple,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  color: Colors.white,
+                  height: 150,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: vehicles.vehicleList.length,
+                    itemBuilder: (context, index) => VehicleCard(
+                      vehicle: vehicles.vehicleList[index],
+                    ),
+                  ),
+                ),
+                RaisedButton(
+                  color: Colors.green,
+                  padding: EdgeInsets.all(15),
+                  elevation: 0,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onPressed: () {},
+                  child: Text(
+                    "BOOK NOW",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class MenuItem extends StatelessWidget {
-  final IconData iconData;
-  final String title;
-  final Function callBack;
+class VehicleCard extends StatefulWidget {
+  final Vehicle vehicle;
 
-  MenuItem({this.iconData, this.title, this.callBack});
+  VehicleCard({this.vehicle});
+
+  @override
+  _VehicleCardState createState() => _VehicleCardState();
+}
+
+class _VehicleCardState extends State<VehicleCard> {
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        iconData,
-        color: Colors.deepPurple,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.deepPurple,
-          fontSize: 17,
-          fontWeight: FontWeight.w500,
+    return FlatButton(
+      child: Stack(children: [
+        Checkbox(
+          onChanged: (value) {
+            isSelected = value;
+          },
+          value: isSelected,
         ),
-      ),
-      onTap: callBack,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            widget.vehicle.image,
+            Text(
+              widget.vehicle.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            Text(
+              "\u{20B9}${widget.vehicle.weekdayPrice}/hr",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
+      ]),
+      onPressed: () {
+        setState(() {
+          isSelected = !isSelected;
+        });
+      },
     );
   }
 }

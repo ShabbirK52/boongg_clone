@@ -1,7 +1,6 @@
-import 'package:boongg_clone/screens/otp_screen.dart';
+import 'package:boongg_clone/screens/enter_phone.dart';
 import 'package:flutter/material.dart';
 import 'package:flag/flag.dart';
-import 'package:flutter_otp/flutter_otp.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
@@ -10,6 +9,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,27 +74,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
+                    child: ButtonTheme(
+                      height: 40,
                       child: RaisedButton(
+                        // shape: RoundedRectangleBorder(
+                        //   borderRadius: BorderRadius.all(
+                        //     Radius.circular(5),
+                        //   ),
+                        // ),
                         elevation: 5,
                         color: Colors.white,
                         onPressed: () {
-                          Navigator.pushNamed(context, OTPScreen.id);
+                          Navigator.pushNamed(context, EnterPhone.id);
                         },
                         child: Row(
                           children: [
                             Flag(
                               'IN',
-                              width: 20,
-                              height: 25,
+                              width: 25,
+                              height: 30,
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Text('+91'),
+                            Text(
+                              '+91',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ],
                         ),
-                      ))
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
