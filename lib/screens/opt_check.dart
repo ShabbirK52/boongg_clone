@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen.dart';
-import 'package:flutter_otp/flutter_otp.dart';
 
 class VerifyOTP extends StatefulWidget {
   static String id = "otp_verification";
@@ -16,7 +15,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
   int otpEntered;
   bool isCorrect;
   SharedPreferences pref;
-  FlutterOtp otpChecker;
 
   Future getSharedPreferences() async {
     pref = await SharedPreferences.getInstance();
@@ -32,7 +30,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
   @override
   Widget build(BuildContext context) {
-    otpChecker = FlutterOtp();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -89,8 +86,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
             color: Colors.deepPurple,
             onPressed: () async {
               isCorrect = resultChecker(otpEntered);
-              var flag = otpChecker.resultChecker(otpEntered);
-              if (isCorrect || flag) {
+              if (isCorrect) {
                 await getSharedPreferences();
                 pref.setBool('isUserVerified', true);
                 Navigator.pushNamed(context, HomeScreen.id);
