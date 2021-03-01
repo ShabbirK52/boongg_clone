@@ -158,20 +158,3 @@ class _DrivingLicenseState extends State<DrivingLicense> {
   }
 }
 
-// GestureDetector(
-//   onTap: () {
-//     getFrontImage();
-//   },
-//   child: CircleAvatar(
-//     radius: 30,
-//     backgroundColor: Colors.purple.shade100,
-//     child: _front == null
-//         ? Icon(
-//             Icons.badge,
-//             color: Colors.deepPurple,
-//           )
-//         : ClipOval(
-//             child: Image.file(_front),
-//           ),
-//   ),
-// ),

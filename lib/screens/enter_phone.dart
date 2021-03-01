@@ -1,6 +1,7 @@
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'opt_check.dart';
+import 'package:flutter_otp/flutter_otp.dart';
 
 class EnterPhone extends StatefulWidget {
   static String id = "enter_phone";
@@ -11,9 +12,11 @@ class EnterPhone extends StatefulWidget {
 
 class _EnterPhoneState extends State<EnterPhone> {
   String phNumber = "";
+  FlutterOtp otp;
 
   @override
   Widget build(BuildContext context) {
+    otp = FlutterOtp();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -97,6 +100,7 @@ class _EnterPhoneState extends State<EnterPhone> {
             child: Text("Send OTP"),
             color: Colors.deepPurple,
             onPressed: () {
+              otp.sendOtp(phNumber);
               Navigator.pushNamed(context, VerifyOTP.id);
             },
           )

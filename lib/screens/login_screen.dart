@@ -2,6 +2,7 @@ import 'package:boongg_clone/screens/enter_phone.dart';
 import 'package:flutter/material.dart';
 import 'package:flag/flag.dart';
 
+
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
   @override
@@ -78,11 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ButtonTheme(
                       height: 40,
                       child: RaisedButton(
-                        // shape: RoundedRectangleBorder(
-                        //   borderRadius: BorderRadius.all(
-                        //     Radius.circular(5),
-                        //   ),
-                        // ),
                         elevation: 5,
                         color: Colors.white,
                         onPressed: () {

@@ -4,7 +4,7 @@ import 'package:boongg_clone/components/drawer_menu.dart';
 import 'package:boongg_clone/services/vehicile_details.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:boongg_clone/services/location.dart';
-import 'package:circular_check_box/circular_check_box.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
@@ -66,11 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: DrawerMenu(),
       body: Stack(
         children: [
-          Container(
-            child: Column(
-              children: [],
-            ),
-          ),
           FlutterMap(
             mapController: controller,
             options: new MapOptions(
@@ -104,6 +99,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+          Container(
+            height: 100,
+            color: Colors.white,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  CalenderRow(
+                    callBack: () {},
+                    title: "Start Date",
+                    dateTime: "11:00",
+                  ),
+                  CalenderRow(
+                    callBack: () {},
+                    title: "End Date",
+                    dateTime: "11:00",
+                  ),
+                ],
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -135,6 +151,54 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class CalenderRow extends StatelessWidget {
+  final Function callBack;
+  final String title;
+  final String dateTime;
+
+  CalenderRow(
+      {@required this.callBack, @required this.title, @required this.dateTime});
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: callBack,
+      child: Row(
+        children: [
+          Icon(
+            Icons.calendar_today_outlined,
+            color: Colors.deepPurple,
+          ),
+          SizedBox(
+            width: 30,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 10,
+                ),
+              ),
+              Text(
+                dateTime,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

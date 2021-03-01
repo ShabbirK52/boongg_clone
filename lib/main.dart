@@ -1,3 +1,4 @@
+import 'package:boongg_clone/screens/faq.dart';
 import 'package:boongg_clone/screens/home_screen.dart';
 import 'package:boongg_clone/screens/location_screen.dart';
 import 'package:boongg_clone/screens/login_screen.dart';
@@ -45,9 +46,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: isLocationAvailable == false || null
+      debugShowCheckedModeBanner: false,
+      initialRoute: isLocationAvailable == false || isLocationAvailable == null
           ? LocationScreen.id
-          : isUserLoggedin == false || null
+          : isUserLoggedin == false || isUserLoggedin == null
               ? LoginScreen.id
               : HomeScreen.id,
       routes: {
@@ -58,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         EnterPhone.id: (context) => EnterPhone(),
         VerifyOTP.id: (context) => VerifyOTP(),
         DrivingLicense.id: (context) => DrivingLicense(),
+        FAQ.id: (context) => FAQ(),
       },
     );
   }

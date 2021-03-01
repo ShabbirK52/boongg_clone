@@ -11,7 +11,13 @@ class _MyBookingsState extends State<MyBookings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Bookings"),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          "My Bookings",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(),
     );
